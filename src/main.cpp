@@ -34,7 +34,7 @@
 
 
 # define CPU_BUF_SIZE 4
-
+# define RAM_BUF_SIZE 10
 
 
 std::string	get_hostname()
@@ -175,6 +175,36 @@ std::string	get_cpu_usage()
 
 
 
+size_t	get_RAM_memory_all()
+{
+	char		*buf;
+	buf = new char(RAM_BUF_SIZE);
+    size_t size;
+    size_t len;
+    len = sizeof(size);
+
+    sysctlbyname("hw.memsize", &size, &len, NULL, 0); // number of RAM
+	// printf("%lu\n", size); // size of all RAM in bytes
+    // printf("%lu\n", len);
+
+    return (size);
+}
+
+
+size_t	get_RAM_memory_used()
+{
+	char		*buf;
+	buf = new char(RAM_BUF_SIZE);
+    FILE* top = popen("top -l 1 | grep \"PhysMem\" | cut -d'(' -f 1 | cut -d' ' -f 2", "r");
+    size_t res;
+    if (top)
+        fgets(buf, RAM_BUF_SIZE, top);
+    pclose(top);
+    // return buf;
+    // printf("%s\n", buf); // size of used memory in megabytes
+    res = atoi(buf);
+    return (res * 1024 * 1024);
+}
 
 int		main(void)
 {
@@ -192,14 +222,14 @@ int		main(void)
 	////////////////////////////////////////////////////
 
 	///////////////////////// CPU //////////////////////
-	get_model_and_cores(); // model and number of cores
-    printf("%s\n", get_N_processes().c_str()); // number of processes
-    printf("%s\n", get_cpu_usage().c_str()); // cpu usage
+	// get_model_and_cores(); // model and number of cores
+    // printf("%s\n", get_N_processes().c_str()); // number of processes
+    // printf("%s\n", get_cpu_usage().c_str()); // cpu usage
 	////////////////////////////////////////////////////
 
 	//////////////////////// RAM ///////////////////////
-
-
+	// printf("%lu\n", get_RAM_memory_all());
+	// printf("%lu\n", get_RAM_memory_used());
 	////////////////////////////////////////////////////
 
 	/////////////////////// NETWORK ////////////////////
