@@ -12,7 +12,7 @@
 
 NAME = ft_gkrellm
 
-SRC = src/main.cpp
+SRC = src/*.cpp
 CFLAG = -Wall -Wextra -Werror -lncurses
 
 CPP = clang++

@@ -11,30 +11,13 @@
 /* ************************************************************************** */
 
 #include "../headers/header.hpp"
-
+#include "../headers/IMonitorModule.hpp"
+#include "../headers/TimeModule.hpp"
+#include "../headers/NcursesDisplay.hpp"
+#include "../headers/CPUModule.hpp"
 
 
 #include "printf.h"
-
-
-#include <iostream>
-#include <string>
-#include <unistd.h>
-#include <limits.h>
-#include <sys/utsname.h>
-#include <time.h>
-
-#include <ifaddrs.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <sys/types.h>
-#include <sys/sysctl.h>
-
-
-
-# define CPU_BUF_SIZE 4
-# define RAM_BUF_SIZE 10
 
 
 std::string	get_hostname()
@@ -206,35 +189,52 @@ size_t	get_RAM_memory_used()
     return (res * 1024 * 1024);
 }
 
-int		main(void)
+// int		main(void)
+// {
+// 	//////////////// HOSTNAME + USERNAME ///////////////
+// 	printf("%s\n", get_hostname().c_str());
+// 	printf("%s\n", get_username().c_str());
+// 	////////////////////////////////////////////////////
+
+// 	//////////////// OS INFO ///////////////////////////
+// 	get_os_info();
+// 	////////////////////////////////////////////////////
+
+// 	/////////////// Date/Time //////////////////////////
+// 	printf("%s\n", get_datetime().c_str());
+// 	////////////////////////////////////////////////////
+
+// 	///////////////////////// CPU //////////////////////
+// 	get_model_and_cores(); // model and number of cores
+//     printf("%s\n", get_N_processes().c_str()); // number of processes
+//     printf("%s\n", get_cpu_usage().c_str()); // cpu usage
+// 	////////////////////////////////////////////////////
+
+// 	//////////////////////// RAM ///////////////////////
+// 	printf("%lu\n", get_RAM_memory_all());
+// 	printf("%lu\n", get_RAM_memory_used());
+// 	////////////////////////////////////////////////////
+
+// 	/////////////////////// NETWORK ////////////////////
+// 	printf("%s\n", network_getInfo().c_str());
+//     ////////////////////////////////////////////////////
+
+// 	return (0);
+// }
+
+// #include "../headers/IMonitorModule.hpp"
+// #include "../headers/TimeModule.hpp"
+// #include "../headers/NcursesDisplay.hpp"
+// #include "../headers/header.hpp"
+// #include "../headers/CPUModule.hpp"
+
+int main(void)
 {
-	//////////////// HOSTNAME + USERNAME ///////////////
-	// printf("%s\n", get_hostname().c_str());
-	// printf("%s\n", get_username().c_str());
-	////////////////////////////////////////////////////
+    TimeModule *timemod = new TimeModule;
+    //CPUModule *proc = new CPUModule;
+    NcursesDisplay window;
+    window.addModule(timemod);
+    window.addModule(new CPUModule);
 
-	//////////////// OS INFO ///////////////////////////
-	// get_os_info();
-	////////////////////////////////////////////////////
-
-	/////////////// Date/Time //////////////////////////
-	// printf("%s\n", get_datetime().c_str());
-	////////////////////////////////////////////////////
-
-	///////////////////////// CPU //////////////////////
-	// get_model_and_cores(); // model and number of cores
-    // printf("%s\n", get_N_processes().c_str()); // number of processes
-    // printf("%s\n", get_cpu_usage().c_str()); // cpu usage
-	////////////////////////////////////////////////////
-
-	//////////////////////// RAM ///////////////////////
-	// printf("%lu\n", get_RAM_memory_all());
-	// printf("%lu\n", get_RAM_memory_used());
-	////////////////////////////////////////////////////
-
-	/////////////////////// NETWORK ////////////////////
-	// printf("%s\n", network_getInfo().c_str());
-    ////////////////////////////////////////////////////
-
-	return (0);
+    window.showModules();
 }

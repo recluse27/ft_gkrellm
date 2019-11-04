@@ -18,7 +18,19 @@
 # include <sstream>
 # include <string>
 # include <curses.h>
-# include <time.h>
+#include <unistd.h>
+#include <limits.h>
+#include <time.h>
+#include <ifaddrs.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <sys/utsname.h>
+
+
+
+# define CPU_BUF_SIZE 4
+# define RAM_BUF_SIZE 10
 
 
 #endif
