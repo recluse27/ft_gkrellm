@@ -28,7 +28,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
+
+
+# define CPU_BUF_SIZE 4
 
 
 
@@ -109,10 +114,65 @@ std::string	network_getInfo()
 	ret = " " + stream.str();
 	ret.insert(36, 1, '\n');
 	ret.insert(37, 2, '\t');
-	return ( ret );
+	return (ret);
+}
 
+
+
+
+std::string	get_N_processes()
+{
+	char		*buf;
+	buf = new char(CPU_BUF_SIZE);
+	std::string	ret;
+    FILE* top = popen("top -l 1 | grep \"Processes\" |  cut -d' ' -f2", "r");
+    if (top)
+        fgets(buf, CPU_BUF_SIZE, top);
+    pclose(top);
+    // return buf;
+	ret = std::string(buf);
+
+	return (ret);
+}
+
+
+void	get_model_and_cores()
+{
+    std::string         model;
+    size_t              core_count;
+    char                *buf;
+
+    char    str[40];
+    size_t  len = sizeof(str);
+    
+
+    sysctlbyname("machdep.cpu.brand_string", str, &len, NULL, 0);
+    model = str;
+    sysctlbyname("machdep.cpu.core_count", &core_count, &len, NULL, 0);
+    buf = new char(CPU_BUF_SIZE);
+    printf("%lu\n", core_count);
+	printf("%s\n", model.c_str());	
 
 }
+
+
+
+std::string	get_cpu_usage()
+{
+	char		*buf;
+	buf = new char(CPU_BUF_SIZE);
+	std::string	ret;
+
+    FILE* top = popen("top -l 1 | grep \"CPU usage:\" |  cut -d ' ' -f3", "r");
+    if (top)
+        fgets(buf, CPU_BUF_SIZE, top);
+    pclose(top);
+    // return buf;
+	ret = std::string(buf);
+
+	return (ret);
+}
+
 
 
 
@@ -131,12 +191,19 @@ int		main(void)
 	// printf("%s\n", get_datetime().c_str());
 	////////////////////////////////////////////////////
 
-	/////////////////////////// CPU ////////////////////
+	///////////////////////// CPU //////////////////////
+	get_model_and_cores(); // model and number of cores
+    printf("%s\n", get_N_processes().c_str()); // number of processes
+    printf("%s\n", get_cpu_usage().c_str()); // cpu usage
+	////////////////////////////////////////////////////
+
+	//////////////////////// RAM ///////////////////////
 
 
+	////////////////////////////////////////////////////
 
 	/////////////////////// NETWORK ////////////////////
-	printf("%s\n", network_getInfo().c_str());
+	// printf("%s\n", network_getInfo().c_str());
     ////////////////////////////////////////////////////
 
 	return (0);
